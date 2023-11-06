@@ -1,9 +1,20 @@
 "use strict";
 
-var _ = require("lodash");
-var http = require("http");
+const _ = require("lodash");
+const http = require("http");
+const Datastore = require("nedb");
 
-var port = process.env.PORT || 3000;
+class Database {
+    static db(name) {
+        const datastore = new Datastore(`nedb/${name}.db`);
+        datastore.loadDatabase();
+        return datastore;
+    }
+
+    users = db("users");
+}
+
+const port = process.env.PORT || 1337;
 
 http.createServer((req, res) => {
     res.writeHead(200, { "Content-Type": "text/plain" });
