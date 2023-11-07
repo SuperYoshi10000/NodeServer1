@@ -3,10 +3,10 @@ name: Bug Report
 about: Create a report to help us improve
 description: File a bug report
 title: "[Bug]: "
-labels: ["bug", "triage"]
-projects: ["octo-org/1", "octo-org/44"]
+labels: ["bug"]
+projects: []
 assignees:
-  - octocat
+  - SuperYoshi10000
 body:
   - type: markdown
     attributes:
