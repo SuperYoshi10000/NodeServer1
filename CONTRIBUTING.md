@@ -6,7 +6,7 @@ Read our [Code of Conduct](./CODE_OF_CONDUCT.md) to keep our community approacha
 
 In this guide you will get an overview of the contribution workflow from opening an issue, creating a PR, reviewing, and merging the PR.
 
-Use the table of contents icon <img src="/contributing/images/table-of-contents.png" width="25" height="25" /> on the top left corner of this document to get to a specific section of this guide quickly.
+~~Use the table of contents icon <img src="/contributing/images/table-of-contents.png" width="25" height="25" /> on the top left corner of this document to get to a specific section of this guide quickly.~~
 
 ## New contributor guide
 
@@ -18,21 +18,21 @@ To get an overview of the project, read the [README](README.md) file. Here are s
 - [Collaborating with pull requests](https://docs.github.com/en/github/collaborating-with-pull-requests)
 
 
-## Getting started
+## ~~Getting started~~
 
-To navigate our codebase with confidence, see [the introduction to working in the docs repository](/contributing/working-in-docs-repository.md) :confetti_ball:. For more information on how we write our markdown files, see [the GitHub Markdown reference](contributing/content-markup-reference.md).
+~~To navigate our codebase with confidence, see [the introduction to working in the docs repository](/contributing/working-in-docs-repository.md) :confetti_ball:. For more information on how we write our markdown files, see [the GitHub Markdown reference](contributing/content-markup-reference.md).~~
 
-Check to see what [types of contributions](/contributing/types-of-contributions.md) we accept before making changes. Some of them don't even require writing a single line of code :sparkles:.
+~~Check to see what [types of contributions](/contributing/types-of-contributions.md) we accept before making changes. Some of them don't even require writing a single line of code :sparkles:.~~
 
 ### Issues
 
 #### Create a new issue
 
-If you spot a problem with the docs, [search if an issue already exists](https://docs.github.com/en/github/searching-for-information-on-github/searching-on-github/searching-issues-and-pull-requests#search-by-the-title-body-or-comments). If a related issue doesn't exist, you can open a new issue using a relevant [issue form](https://github.com/github/docs/issues/new/choose).
+If you spot a problem with the docs, [search if an issue already exists](https://docs.github.com/en/github/searching-for-information-on-github/searching-on-github/searching-issues-and-pull-requests#search-by-the-title-body-or-comments). If a related issue doesn't exist, you can open a new issue using a relevant [issue form](https://github.com/SuperYoshi10000/LoginTest/issues/new/choose).
 
 #### Solve an issue
 
-Scan through our [existing issues](https://github.com/github/docs/issues) to find one that interests you. You can narrow down the search using `labels` as filters. See [Labels](/contributing/how-to-use-labels.md) for more information. As a general rule, we don’t assign issues to anyone. If you find an issue to work on, you are welcome to open a PR with a fix.
+Scan through our [existing issues](https://github.com/SuperYoshi10000/LoginTest/issues) to find one that interests you. You can narrow down the search using `labels` as filters. ~~See [Labels](/contributing/how-to-use-labels.md) for more information.~~ ~~As a general rule, we don’t assign issues to anyone.~~ If you find an issue to work on, you are welcome to open a PR with a fix.
 
 ### Make Changes
 
@@ -77,11 +77,11 @@ Once you submit your PR, a Docs team member will review your proposal. We may as
 
 ### Your PR is merged!
 
-Congratulations :tada::tada: The GitHub team thanks you :sparkles:.
+Congratulations :tada::tada: ~~The GitHub team~~ <ins>I</ins> thank~~s~~ you :sparkles:.
 
-Once your PR is merged, your contributions will be publicly visible on the [GitHub docs](https://docs.github.com/en).
+Once your PR is merged, your contributions will be publicly visible ~~on the [GitHub docs](https://docs.github.com/en)~~.
 
-Now that you are part of the GitHub docs community, see how else you can [contribute to the docs](/contributing/types-of-contributions.md).
+~~Now that you are part of the GitHub docs community, see how else you can [contribute to the docs](/contributing/types-of-contributions.md).~~
 
 ## Windows
 
