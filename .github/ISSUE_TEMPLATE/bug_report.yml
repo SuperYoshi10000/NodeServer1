@@ -67,8 +67,7 @@ body:
         - label: Website Problem (visible to you)
         - label: Server Problem
         - label: Security Problem
-          description: Consider reporting a [Security Vulnerability](https://github.com/SuperYoshi10000/LoginTest/security/advisories/new) instead.
-            If showind this to others could be a problem, do not put any details in the issue description and 
+          description: Consider reporting a [Security Vulnerability](https://github.com/SuperYoshi10000/LoginTest/security/advisories/new) instead. If showing details to others could be a problem, do not report the vulnerability as an issue. 
   - type: checkboxes
     id: terms
     attributes:
