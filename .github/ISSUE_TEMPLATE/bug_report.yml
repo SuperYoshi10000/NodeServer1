@@ -77,7 +77,7 @@ body:
         - Low
         - Moderate
         - High
-        - **Critical**
+        - "**Critical**"
   - type: checkboxes
     id: terms
     attributes:
