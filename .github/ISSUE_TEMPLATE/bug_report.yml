@@ -53,13 +53,22 @@ body:
         - Microsoft Edge
         - Opera
         - Internet Explorer
-        
   - type: textarea
     id: logs
     attributes:
       label: Relevant log output
       description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
       render: shell
+  - type: checkboxes
+    id: what
+      label: What kind of bug is this?
+      description: Where do you think the problem is? Leave blank if you aren't sure.
+      options:
+        - label: Website Problem (visible to you)
+        - label: Server Problem
+        - label: Security Problem
+          description: Consider reporting a [Security Vulnerability](https://github.com/SuperYoshi10000/LoginTest/security/advisories/new) instead.
+            If showind this to others could be a problem, do not put any details in the issue description and 
   - type: checkboxes
     id: terms
     attributes:
