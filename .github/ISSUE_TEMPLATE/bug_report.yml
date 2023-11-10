@@ -61,7 +61,7 @@ body:
       render: shell
   - type: checkboxes
     id: what
-      label: What kind of bug is this?
+      label: "What kind of bug is this?"
       description: Where do you think the problem is? Leave blank if you aren't sure.
       options:
         - label: Website Problem (visible to you)
