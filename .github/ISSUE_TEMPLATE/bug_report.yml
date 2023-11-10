@@ -74,10 +74,10 @@ body:
       label: Severity
       description: How big of a problem is this bug. How important is it that is is fixed?
       options:
-        - "- Low"
-        - "* Moderate"
-        - ! High
-        - ⚠ Critical
+        - Low
+        - Moderate
+        - High
+        - **Critical**
   - type: checkboxes
     id: terms
     attributes:
