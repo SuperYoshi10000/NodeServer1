@@ -75,7 +75,7 @@ body:
       description: How big of a problem is this bug. How important is it that is is fixed?
       options:
         - label: "- Low"
-        - label: * Moderate
+        - label: "* Moderate"
         - label: ! High
         - label: <!> Critical
   - type: checkboxes
