@@ -8,6 +8,9 @@ assignees:
 body:
   - type: markdown
     attributes:
+      value: "## Welcome!"
+  - type: markdown
+    attributes:
       value: |
         Thanks for taking the time to fill out this bug report!
   - type: input
@@ -27,13 +30,15 @@ body:
       value: "A bug happened!"
     validations:
       required: true
-  - type: input
+  - type: dropdown
     id: version
     attributes:
       label: Version
       description: What version of our software are you running?
-      placeholder: "Example: 1.0.0"
-      value: ""
+      options:
+        - Latest
+        - X.x.x
+      default: 0
     validations:
       required: true
   - type: dropdown
