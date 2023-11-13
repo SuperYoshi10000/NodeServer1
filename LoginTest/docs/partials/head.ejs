@@ -1,0 +1,15 @@
+<head>
+    <% if (data["title"]) { %>
+        <title><%= data["title"] %></title>
+    <% } %>
+    <% if (data["description"]) { %>
+        <meta name="description" content="<%= data["description"] %>">
+    <% } %>
+    <% if (data["keywords"]) { %>
+        <meta name="keywords" content="<%= data["keywords"] %>">
+    <% } %>
+    <meta charset="utf-8">
+    <link rel="icon" href="/assets/icons/favicon.ico">
+    <link rel="stylesheet" href="/assets/styles/main.css">
+    <script src="/assets/scripts/main.js"></script>
+</head>
