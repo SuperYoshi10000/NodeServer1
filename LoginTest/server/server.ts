@@ -5,7 +5,7 @@ import fs from "fs";
 import app from "./app";
 import EJSArguments from "./arguments";
 import mimetypes from "mime-types";
-import Collections, { asArray, map } from "../utils/collections";
+import Collections from "../utils/collections";
 import { json } from "express";
 
 type condition = boolean | 0 | 1;
@@ -38,22 +38,22 @@ class HttpServer {
     }
     logRequest(req: IncomingMessage, res: ServerResponse): void {
         this.logToFile(
-            "-----\n**REQUEST**\nat", this.rightNow(),
-            "\nRequested:", req.method, req.url, "HTTP/", req.httpVersion,
+            "-----at", this.rightNow() +
+            "\n**REQUEST**\nRequested:", req.method, req.url, "HTTP/" + req.httpVersion,
             "\nSocket (Remote):", req.socket.remoteAddress, req.socket.remotePort,
             "\nSocket (Local):", req.socket.localAddress, req.socket.localPort,
-            "\nHEADERS\n" + Collections.reduce(new Map(Object.entries(req.headers)), [""], (t, v, k) => {
-                t.push(...map(asArray(v), (v) => k.toString() + " = " + v + "\n"));
-            }).join(""),
-            "BODY", req.readable ? req.read() : "");
-        this.logToFile("-----\nRESPONSE AT", this.rightNow(), "\nStatus:", res.statusCode, res.statusMessage);
+            "\nHEADERS" + Collections.reduce(new Map(Object.entries(req.headers)), [], (t, v, k) => {
+                t.push(...Collections.asArray(v).map((v) =>"\n" + Collections.toTitleCase(k) + " = " + v));
+            }).join("") +
+            "\nBODY:" + Collections.newlineIfMultipleLines(req.read() || "", " ") +
+            "\n\n**RESPONSE**\nStatus:", "HTTP/" + req.httpVersion, res.statusCode, res.statusMessage);
         console.log(new Map(Object.entries(req.headers)));
     }
     
     logHosts() {
         Collections.combineLists(this.hosts, this.ports, (h, p) => {
             if (h.includes(":")) h = `[${h}]`;
-            return h + ":" + p
+            return h + ":" + p;
         }).forEach((i) => {
             this.log("Listening to", [i], 1);
         });
