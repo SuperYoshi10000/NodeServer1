@@ -1,11 +1,9 @@
 <head>
     <% if (data["title"]) { %>
         <title><%= data["title"] %></title>
-    <% } %>
-    <% if (data["description"]) { %>
+    <% } if (data["description"]) { %>
         <meta name="description" content="<%= data["description"] %>">
-    <% } %>
-    <% if (data["keywords"]) { %>
+    <% } if (data["keywords"]) { %>
         <meta name="keywords" content="<%= data["keywords"] %>">
     <% } %>
     <meta charset="utf-8">

@@ -13,12 +13,11 @@ export function reduce<T, K, V>(base: V[] | Map<K|undefined, V>, value: T, combi
     });
     return result;
 }
-export function map<T, K, V, R>(base: V[] | Map<K, V>, combine: (v: V, k?: K | number) => R): R[] {
+export function map<K, V, R>(base: V[] | Map<K, V>, combine: (v: V, k: number | K, a: V[] | Map<K, V>) => R): R[] {
     var result: R[] = [];
-    base.forEach((v: V, k: number | K) => {
-        result.push(combine(v, k));
-    });
+    base.forEach((v: V, k: number | K, a: V[] | Map<K, V>) => result.push(combine(v, k, a)));
     return result;
+
 }
 export function merge<A, B, R>(a: A[], b: B[], combine: (a: A, b: B) => R): R[] {
     var result: R[] = [];
@@ -55,6 +54,31 @@ export function toTitleCase(s: any, separator: RegExp = /\W/): string {
     }
     return l.join("");
 }
+export function asObjectKey(value: any): string {
+    if (typeof value == "string") return value;
+    if (typeof value == "object") return JSON.stringify(value);
+    return `[${value.toString()}]`;
+}
+
+export function stringify<V extends { toString(): string }, T = string>(obj: object,
+    prop2string: ((key: string, value: V) => string | T) | [string?, string?, string?] = (k, v) => asObjectKey(k) + ": " + v?.toString?.(),
+    combiner: ((s: (string | T)[]) => string) | [string?, string?, string?] | string | null = (s) => `{\n\t${s.join(",\n\t")}\n}`
+): string {
+    if (combiner == null) combiner = (s) => s.join("");
+    const entries: [string, any][] = Object.entries(obj);
+    var realProp2string = 
+        prop2string instanceof Array
+        ? (k: string, v: V) => 
+            (prop2string[0] ? prop2string[0] + asObjectKey(k) : "")
+            + prop2string[1] || "" + v.toString()
+            + prop2string[2] || ""
+        : prop2string;
+    var realCombiner =
+        combiner instanceof Array ? (s: (string | T)[]) => combiner[0] + s.join(combiner[1]) + combiner[2] :
+        typeof combiner == "string" ? (s: (string | T)[]) => s.join(combiner.toString()) :
+        combiner;
+    return realCombiner(entries.map(([k, v]) => realProp2string(k, v)));
+}
 
 export default {
     combineLists,
@@ -66,5 +90,7 @@ export default {
     newlineIfMultipleLines,
     stringToCharList,
     charListToString,
-    toTitleCase
+    toTitleCase,
+    asObjectKey,
+    stringify
 }
