@@ -1,4 +1,5 @@
 import http, { IncomingMessage, OutgoingHttpHeaders, Server, ServerResponse } from "http";
+import https from "https";
 import net from "net";
 import ejs from "ejs";
 import fs from "fs";
@@ -6,7 +7,7 @@ import app from "./app";
 import EJSArguments from "./arguments";
 import mimetypes from "mime-types";
 import Collections from "../utils/collections";
-import { json } from "express";
+import busboy from "busboy";
 
 type condition = boolean | 0 | 1;
 
@@ -25,7 +26,68 @@ class HttpServer {
         this.start();
         this.log("HTTP server started");
     }
-    
+
+    start() {
+        this.instancename = this.today();
+
+        this.log("Starting Server as " + this.instancename, 1);
+        // this.server = http.createServer(this.GET.bind(this)).listen(this.ports[0]);
+
+        app.listen(this.ports[0]);
+        app.get("/", this.GET);
+        app.post("/", this.POST);
+        
+        this.logHosts();
+        this.log("Using default headers:", [this.defaults], 1);
+        this.log("Server Started", 1);
+
+        this.log(`./data/requests/${this.instancename}.log`);
+
+    }
+    process(req: IncomingMessage, res: ServerResponse): void {
+        this.log("Recieved request", 1);
+        const path: string = this.getPath(this.checkOverride(req.url));
+
+        this.log("Locating " + path);
+        fs.stat(path, (err, stats) => {
+            if (err) {
+                this.NOT_FOUND(path, req, res);
+            } else {
+                if (stats.isDirectory()) this.found(path + "/index.ejs", req, res);
+                this.found(path, req, res);
+            }
+        });
+    }
+    GET(req: IncomingMessage, res: ServerResponse): void {
+        this.process(req, res);
+    }
+    POST(req: IncomingMessage, res: ServerResponse): void {
+        const bb = busboy({ headers: req.headers });
+        bb.on("file", (name, file, info) => {
+            const { filename, encoding, mimeType } = info;
+            console.log(
+                `File [${name}]: filename: %j, encoding: %j, mimeType: %j`,
+                filename,
+                encoding,
+                mimeType
+            );
+            file.on("data", (data) => {
+                console.log(`File [${name}] got ${data.length} bytes`);
+            }).on("close", () => {
+                console.log(`File [${name}] done`);
+            });
+        });
+        bb.on("field", (name, val, info) => {
+            console.log(`Field [${name}]: value: %j`, val);
+        });
+        bb.on("close", () => {
+            console.log("Done parsing form!");
+            res.writeHead(303, { Connection: "close", Location: "/" });
+            res.end();
+        });
+        req.pipe(bb);
+    }
+
     log(message: string, extra?: any[] | condition, toFile?: condition): void {
         const msg: string
          = "[" + this.rightNow() + "] "
@@ -34,45 +96,56 @@ class HttpServer {
         if (toFile || extra == true || extra == 1) this.logToFile(msg);
     }
     logToFile(...message: any[]): void {
-        fs.appendFile(`./data/requests/${this.instancename}.log`, message.join(" ") + "\n", (err) => {});
+        fs.appendFile(
+            `./data/requests/${this.instancename}.log`,
+            message.join(" ") + "\n",
+            (err) => err && console.error(err));
     }
     logRequest(req: IncomingMessage, res: ServerResponse): void {
+        const reqHeaders = Collections.stringify(req.headers, ["\n> ", " = "], [""]);
+        const resHeaders = Collections.stringify(res.getHeaders(), ["\n> ", " = "], [""]);
         this.logToFile(
             "-----at", this.rightNow() +
             "\n**REQUEST**\nRequested:", req.method, req.url, "HTTP/" + req.httpVersion,
             "\nSocket (Remote):", req.socket.remoteAddress, req.socket.remotePort,
             "\nSocket (Local):", req.socket.localAddress, req.socket.localPort,
-            "\nHEADERS" + Collections.reduce(new Map(Object.entries(req.headers)), [], (t, v, k) => {
-                t.push(...Collections.asArray(v).map((v) =>"\n" + Collections.toTitleCase(k) + " = " + v));
-            }).join("") +
-            "\nBODY:" + Collections.newlineIfMultipleLines(req.read() || "", " ") +
-            "\n\n**RESPONSE**\nStatus:", "HTTP/" + req.httpVersion, res.statusCode, res.statusMessage);
+            "\nHEADERS", reqHeaders +
+            "\nBODY:", req.read() +
+            "\n\n**RESPONSE**\nStatus:", "HTTP/" + req.httpVersion, res.statusCode, res.statusMessage,
+            "\nUpgrading:", res.upgrading ,
+            "\nKeepalive:", res.shouldKeepAlive,
+            "\nSocket (Remote):", this.formatIP(res.socket?.remoteAddress) + ":" + res.socket?.remotePort,
+            "\nSocket (Local):", this.formatIP(res.socket?.localAddress) + ":" + res.socket?.localPort,
+            "\nUseChunkedEncodingDyDefault:", res.useChunkedEncodingByDefault,
+            "\nChunked Encoding:", res.chunkedEncoding,
+            "\nSend Date:s", res.sendDate,
+            "\nHEADERS" + resHeaders + 
+            "")
+
+            
         console.log(new Map(Object.entries(req.headers)));
+
+    }
+    readbody(r: IncomingMessage | ServerResponse): string {
+        const content: any = app;
+        content;
+        return "";
     }
     
     logHosts() {
         Collections.combineLists(this.hosts, this.ports, (h, p) => {
-            if (h.includes(":")) h = `[${h}]`;
-            return h + ":" + p;
+            return this.formatIP(h) + ":" + p;
         }).forEach((i) => {
             this.log("Listening to", [i], 1);
         });
     }
-    
+    formatIP(ip: string) {
+        if (ip?.includes(":")) ip = `[${ip}]`;
+        return ip;
+    }
+
     greet(): void {
         this.log("Hello!", 1);
-    }
-    start() {
-        this.instancename = this.today();
-        
-        this.log("Starting Server as " + this.instancename, 1);
-        this.server = http.createServer(this.request.bind(this)).listen(this.ports[0]);
-        this.logHosts();
-        this.log("Using default headers:", [this.defaults], 1);
-        this.log("Server Started", 1);
-
-        this.log(`./data/requests/${this.instancename}.log`);
-
     }
     close() {
         this.log("Stopping Server", 1);
@@ -82,20 +155,6 @@ class HttpServer {
     restart() {
         this.close();
         this.start();
-    }
-    
-    request(req: IncomingMessage, res: ServerResponse): void {
-        this.log("Recieved request", 1);
-        var path: string = this.getPath(this.checkOverride(req.url));
-        this.log("Locating " + path);
-        fs.stat(path, (err, stats) => {
-            if (err) {
-                this.NOT_FOUND(path, req, res);
-            } else {           
-                if (stats.isDirectory()) this.found(path + "/index.ejs", req, res);
-                this.found(path, req, res);
-            }
-        });
     }
 
     today(): string {
@@ -152,5 +211,4 @@ class HttpServer {
     }
 }
 
-app.use(HttpServer.main.request);
 export default HttpServer.main;
